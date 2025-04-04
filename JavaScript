@@ -1,0 +1,193 @@
+// Initialize charts when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  initTrafficChart();
+  initThreatChart();
+  initGeoChart();
+  initAttackChart();
+});
+
+function showSection(id) {
+  // Hide all sections
+  document.querySelectorAll('.section').forEach(section => {
+    section.classList.remove('visible');
+  });
+  
+  // Show selected section
+  document.getElementById(id).classList.add('visible');
+  
+  // Special handling for attack simulation
+  if (id === 'ddosAlert') {
+    simulateDDoS();
+  }
+}
+
+function simulateDDoS() {
+  // Show attack metrics
+  const ddosSection = document.getElementById('ddosAlert');
+  ddosSection.classList.add('visible');
+  
+  // Initialize attack traffic chart
+  initAttackTrafficChart();
+  
+  // Hide recovery status if shown
+  document.getElementById('recoveryStatus').style.display = 'none';
+  
+  // Simulate mitigation after delay
+  setTimeout(() => {
+    // Update mitigation progress
+    const statusItems = ddosSection.querySelectorAll('.status-item');
+    statusItems[0].querySelector('.status-value').textContent = '248';
+    statusItems[1].querySelector('.status-value').textContent = '98%';
+    
+    // Show recovery after another delay
+    setTimeout(() => {
+      document.getElementById('recoveryStatus').style.display = 'block';
+    }, 2000);
+  }, 2000);
+}
+
+function initTrafficChart() {
+  const ctx = document.getElementById('trafficChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00'],
+      datasets: [{
+        label: 'Normal Traffic',
+        data: [1200, 800, 1100, 1500, 2000, 2200, 1800, 1600],
+        borderColor: '#3498db',
+        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Normal Traffic Pattern (Last 24 Hours)'
+        }
+      }
+    }
+  });
+}
+
+function initThreatChart() {
+  const ctx = document.getElementById('threatChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Legitimate', 'Suspicious', 'Malicious'],
+      datasets: [{
+        data: [85, 10, 5],
+        backgroundColor: [
+          '#27ae60',
+          '#f39c12',
+          '#e74c3c'
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Traffic Composition'
+        }
+      }
+    }
+  });
+}
+
+function initGeoChart() {
+  const ctx = document.getElementById('geoChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['United States', 'Germany', 'China', 'Russia', 'Brazil', 'India', 'Japan'],
+      datasets: [{
+        label: 'Legitimate Traffic',
+        data: [1200, 800, 400, 300, 250, 600, 450],
+        backgroundColor: '#3498db'
+      }, {
+        label: 'Suspicious Traffic',
+        data: [50, 30, 120, 90, 40, 80, 20],
+        backgroundColor: '#f39c12'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Traffic by Geographic Region'
+        }
+      }
+    }
+  });
+}
+
+function initAttackChart() {
+  const ctx = document.getElementById('attackChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['HTTP Flood', 'SYN Flood', 'UDP Flood', 'ICMP Flood', 'DNS Amplification', 'Slowloris'],
+      datasets: [{
+        label: 'Current Threats',
+        data: [65, 40, 30, 20, 15, 35],
+        backgroundColor: 'rgba(231, 76, 60, 0.2)',
+        borderColor: '#e74c3c'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Threat Type Distribution'
+        }
+      }
+    }
+  });
+}
+
+function initAttackTrafficChart() {
+  const ctx = document.getElementById('attackTrafficChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['-5m', '-4m', '-3m', '-2m', '-1m', 'Now'],
+      datasets: [{
+        label: 'Attack Traffic',
+        data: [1200, 2500, 4800, 9200, 15780, 15780],
+        borderColor: '#e74c3c',
+        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+        tension: 0.3,
+        fill: true
+      }, {
+        label: 'Legitimate Traffic',
+        data: [1200, 1200, 1200, 1200, 1200, 1200],
+        borderColor: '#27ae60',
+        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Traffic Spike During DDoS Attack'
+        }
+      }
+    }
+  });
+}
